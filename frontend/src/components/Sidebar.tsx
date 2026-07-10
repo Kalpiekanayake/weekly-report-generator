@@ -1,4 +1,4 @@
-import { LayoutDashboard, FileText, FolderKanban, LogOut } from 'lucide-react';
+import { LayoutDashboard, FileText, FolderKanban, LogOut, Bot } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
@@ -10,7 +10,10 @@ export const Sidebar = () => {
   const navItems = [
     { to: '/', label: 'Reports', icon: FileText },
     { to: '/projects', label: 'Projects', icon: FolderKanban },
-    ...(user?.role === 'manager' ? [{ to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard }] : []),
+    ...(user?.role === 'manager' ? [
+      { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+      { to: '/ai', label: 'AI Assistant', icon: Bot }
+    ] : []),
   ];
 
   return (

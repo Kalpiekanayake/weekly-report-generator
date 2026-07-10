@@ -35,6 +35,7 @@ from app.routers import auth as auth_router
 from app.routers import projects as projects_router
 from app.routers import reports as reports_router
 from app.routers import dashboard as dashboard_router
+from app.routers import ai_chat as ai_router
 
 
 # ---------------------------------------------------------------------------
@@ -104,6 +105,7 @@ app.include_router(auth_router.router,     prefix=API_V1)
 app.include_router(projects_router.router, prefix=API_V1)
 app.include_router(reports_router.router,  prefix=API_V1)
 app.include_router(dashboard_router.router, prefix=API_V1)
+app.include_router(ai_router.router,        prefix=API_V1)
 
 
 # ---------------------------------------------------------------------------

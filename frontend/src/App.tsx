@@ -9,6 +9,7 @@ import { ReportFormPage } from './pages/ReportFormPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { ProjectsPage } from './pages/ProjectsPage';
 import { ProjectFormPage } from './pages/ProjectFormPage';
+import { AIChatPage } from './pages/AIChatPage';
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
               <Route path="/projects/:id/edit" element={<ProjectFormPage />} />
               <Route element={<ManagerRoute />}>
                 <Route path="/dashboard" element={<DashboardPage />} />
+                <Route path="/ai" element={<AIChatPage />} />
               </Route>
             </Route>
           </Route>
