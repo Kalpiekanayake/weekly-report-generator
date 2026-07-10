@@ -1,5 +1,5 @@
 import { useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { Input } from '../components/Input';
 import { Button } from '../components/Button';
@@ -34,6 +34,10 @@ export const LoginPage = () => {
           <Input label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
           <Button type="submit" className="w-full">Sign In</Button>
         </form>
+        <p className="text-center text-sm text-gray-600 mt-6">
+          Don't have an account?{' '}
+          <Link to="/register" className="text-indigo-600 hover:text-indigo-500 font-medium">Create an account</Link>
+        </p>
       </Card>
     </div>
   );
