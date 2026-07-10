@@ -9,3 +9,10 @@ export const ProtectedRoute = () => {
   if (loading) return <LoadingSpinner />;
   return user ? <Outlet /> : <Navigate to="/login" replace />;
 };
+
+export const ManagerRoute = () => {
+  const { user, loading } = useContext(AuthContext);
+
+  if (loading) return <LoadingSpinner />;
+  return user?.role === 'manager' ? <Outlet /> : <Navigate to="/" replace />;
+};
