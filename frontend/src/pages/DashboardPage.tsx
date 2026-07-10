@@ -2,15 +2,25 @@ import { useState, useEffect } from 'react';
 import { dashboardService } from '../services/dashboardService';
 import { LoadingSpinner } from '../components/LoadingSpinner';
 import { ErrorAlert } from '../components/ErrorAlert';
+import { LineChartComponent } from '../components/charts/LineChartComponent';
+import { BarChartComponent } from '../components/charts/BarChartComponent';
+import { PieChartComponent } from '../components/charts/PieChartComponent';
 
 export const DashboardPage = () => {
   const [data, setData] = useState<any>(null);
+  const [analytics, setAnalytics] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
-    dashboardService.getDashboardData()
-      .then(res => setData(res.data))
+    Promise.all([
+      dashboardService.getDashboardData(),
+      dashboardService.getAnalyticsData()
+    ])
+      .then(([res1, res2]) => {
+        setData(res1.data);
+        setAnalytics(res2.data);
+      })
       .catch(() => setError('Failed to load dashboard'))
       .finally(() => setLoading(false));
   }, []);
@@ -40,6 +50,30 @@ export const DashboardPage = () => {
             <div className="text-2xl font-bold">{s.value}</div>
           </div>
         ))}
+      </div>
+
+      {/* Analytics Charts */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="bg-white p-4 rounded shadow">
+          <h3 className="font-bold mb-4">Reports per Week</h3>
+          <LineChartComponent data={analytics.reports_per_week} />
+        </div>
+        <div className="bg-white p-4 rounded shadow">
+          <h3 className="font-bold mb-4">Reports by Project</h3>
+          <BarChartComponent data={analytics.reports_by_project} />
+        </div>
+        <div className="bg-white p-4 rounded shadow">
+          <h3 className="font-bold mb-4">Reports by Team Member</h3>
+          <BarChartComponent data={analytics.reports_by_member} />
+        </div>
+        <div className="bg-white p-4 rounded shadow">
+          <h3 className="font-bold mb-4">Submission Status Distribution</h3>
+          <PieChartComponent data={analytics.status_distribution} />
+        </div>
+        <div className="bg-white p-4 rounded shadow">
+          <h3 className="font-bold mb-4">Open Blockers by Project</h3>
+          <BarChartComponent data={analytics.open_blockers_by_project} />
+        </div>
       </div>
 
       {/* Project Summary */}
