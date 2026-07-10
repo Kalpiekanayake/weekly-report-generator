@@ -6,6 +6,7 @@ import { LineChartComponent } from '../components/charts/LineChartComponent';
 import { BarChartComponent } from '../components/charts/BarChartComponent';
 import { PieChartComponent } from '../components/charts/PieChartComponent';
 import { Card } from '../components/Card';
+import { TeamReportsTable } from '../components/TeamReportsTable';
 
 export const DashboardPage = () => {
   const [data, setData] = useState<any>(null);
@@ -51,6 +52,8 @@ export const DashboardPage = () => {
           </Card>
         ))}
       </div>
+
+      <TeamReportsTable />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <Card><h3 className="font-semibold text-lg mb-4">Reports per Week</h3><LineChartComponent data={analytics.reports_per_week} /></Card>
