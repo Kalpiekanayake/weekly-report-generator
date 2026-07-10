@@ -4,6 +4,8 @@ import { AuthContext } from '../context/AuthContext';
 import { Input } from '../components/Input';
 import { Button } from '../components/Button';
 import { ErrorAlert } from '../components/ErrorAlert';
+import { Card } from '../components/Card';
+import { LogIn } from 'lucide-react';
 
 export const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -23,14 +25,16 @@ export const LoginPage = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded shadow">
-      <h2 className="text-2xl font-bold mb-6">Login</h2>
-      {error && <ErrorAlert message={error} />}
-      <form onSubmit={handleSubmit}>
-        <Input label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        <Input label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-        <Button type="submit">Login</Button>
-      </form>
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+      <Card className="w-full max-w-md">
+        <h2 className="text-2xl font-bold mb-6 text-gray-900 flex items-center gap-2"><LogIn className="text-indigo-600"/> Login</h2>
+        {error && <ErrorAlert message={error} />}
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <Input label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          <Input label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          <Button type="submit" className="w-full">Sign In</Button>
+        </form>
+      </Card>
     </div>
   );
 };
