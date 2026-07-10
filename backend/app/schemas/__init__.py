@@ -4,8 +4,8 @@ from app.schemas.project import ProjectCreate, ProjectUpdate, ProjectOut
 from app.schemas.report import ReportCreate, ReportUpdate, ReportOut
 from app.schemas.ai_chat import AIChatRequest, AIChatHistoryOut
 from app.schemas.dashboard import (
-    DashboardSummary, MemberSubmissionStatus,
-    TasksTrendPoint, WorkloadPoint, ActivityItem,
+    DashboardStats, ProjectSummary, RecentActivity,
+    AnalyticsData, ChartDataPoint,
 )
 
 __all__ = [
@@ -13,6 +13,6 @@ __all__ = [
     "ProjectCreate", "ProjectUpdate", "ProjectOut",
     "ReportCreate", "ReportUpdate", "ReportOut",
     "AIChatRequest", "AIChatHistoryOut",
-    "DashboardSummary", "MemberSubmissionStatus",
-    "TasksTrendPoint", "WorkloadPoint", "ActivityItem",
+    "DashboardStats", "ProjectSummary", "RecentActivity",
+    "AnalyticsData", "ChartDataPoint",
 ]
