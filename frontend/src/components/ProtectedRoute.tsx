@@ -16,3 +16,10 @@ export const ManagerRoute = () => {
   if (loading) return <LoadingSpinner />;
   return user?.role === 'manager' ? <Outlet /> : <Navigate to="/" replace />;
 };
+
+export const PublicRoute = () => {
+  const { user, loading } = useContext(AuthContext);
+
+  if (loading) return <LoadingSpinner />;
+  return user ? <Navigate to="/" replace /> : <Outlet />;
+};

@@ -11,6 +11,7 @@ export const RegisterPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [full_name, setFullName] = useState('');
+  const [role, setRole] = useState('member');
   const [error, setError] = useState('');
   const { register } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -18,7 +19,7 @@ export const RegisterPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await register({ email, password, full_name, role: 'member' });
+      await register({ email, password, full_name, role });
       navigate('/');
     } catch (err: any) {
       const responseData = err.response?.data;
@@ -42,6 +43,13 @@ export const RegisterPage = () => {
           <Input label="Full Name" type="text" value={full_name} onChange={(e) => setFullName(e.target.value)} required />
           <Input label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
           <Input label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
+            <select value={role} onChange={(e) => setRole(e.target.value)} className="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-indigo-500 outline-none">
+                <option value="member">Team Member</option>
+                <option value="manager">Manager/Admin</option>
+            </select>
+          </div>
           <Button type="submit" className="w-full">Create Account</Button>
         </form>
         <p className="text-center text-sm text-gray-600 mt-6">
