@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from sqlalchemy import func
+from sqlalchemy import func, String
 from datetime import date, timedelta
 
 from app.core.database import get_db
@@ -86,7 +86,7 @@ def get_dashboard_analytics(
 ):
     # 1. Reports submitted per week
     reports_per_week = db.query(
-        Report.week_start_date.cast(func.string).label("week"), 
+        Report.week_start_date.cast(String).label("week"), 
         func.count(Report.id).label("count")
     ).group_by(Report.week_start_date).all()
     reports_per_week_data = [ChartDataPoint(name=str(r.week), value=r.count) for r in reports_per_week]
