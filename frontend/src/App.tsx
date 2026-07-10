@@ -4,6 +4,8 @@ import { AppLayout } from './layouts/AppLayout';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
+import { MyReportsPage } from './pages/MyReportsPage';
+import { ReportFormPage } from './pages/ReportFormPage';
 
 function App() {
   return (
@@ -14,7 +16,9 @@ function App() {
           <Route path="/register" element={<RegisterPage />} />
           <Route element={<ProtectedRoute />}>
             <Route element={<AppLayout />}>
-              <Route path="/" element={<div>Dashboard (Protected)</div>} />
+              <Route path="/" element={<MyReportsPage />} />
+              <Route path="/reports/new" element={<ReportFormPage />} />
+              <Route path="/reports/:id/edit" element={<ReportFormPage />} />
             </Route>
           </Route>
         </Routes>
