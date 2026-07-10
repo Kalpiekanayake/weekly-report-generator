@@ -211,7 +211,7 @@ Add screenshots here.
 
 ---
 #  ER-Diagram
-![Uploading Weekly Report Generator.drawio.png…]()
+<img width="961" height="625" alt="Weekly Report Generator drawio" src="https://github.com/user-attachments/assets/5470b58c-3a1a-468a-9fed-3b3bcb0bf9b9" />
 
 
 # 🔮 Future Improvements
