@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import List
+from typing import List, Optional
 
 class ProjectSummary(BaseModel):
     project_name: str
@@ -24,3 +24,16 @@ class DashboardStats(BaseModel):
     pending_reports: int
     project_summaries: List[ProjectSummary]
     recent_activity: List[RecentActivity]
+
+# --- Analytics Schemas ---
+
+class ChartDataPoint(BaseModel):
+    name: str
+    value: int
+
+class AnalyticsData(BaseModel):
+    reports_per_week: List[ChartDataPoint]
+    reports_by_project: List[ChartDataPoint]
+    reports_by_member: List[ChartDataPoint]
+    status_distribution: List[ChartDataPoint]
+    open_blockers_by_project: List[ChartDataPoint]

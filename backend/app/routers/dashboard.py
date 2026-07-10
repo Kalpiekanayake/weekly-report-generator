@@ -7,7 +7,7 @@ from app.dependencies import require_manager
 from app.models.user import User
 from app.models.project import Project
 from app.models.report import Report
-from app.schemas.dashboard import DashboardStats, ProjectSummary, RecentActivity
+from app.schemas.dashboard import DashboardStats, ProjectSummary, RecentActivity, AnalyticsData, ChartDataPoint
 
 router = APIRouter(prefix="/dashboard", tags=["dashboard"])
 
@@ -66,4 +66,53 @@ def get_dashboard(
         pending_reports=pending_reports,
         project_summaries=project_summaries,
         recent_activity=recent_activity
+    )
+
+@router.get("/analytics/", response_model=AnalyticsData)
+def get_dashboard_analytics(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_manager),
+):
+    # 1. Reports submitted per week
+    reports_per_week = db.query(
+        Report.week_start_date.cast(func.string).label("week"), 
+        func.count(Report.id).label("count")
+    ).group_by(Report.week_start_date).all()
+    reports_per_week_data = [ChartDataPoint(name=str(r.week), value=r.count) for r in reports_per_week]
+
+    # 2. Reports by project
+    reports_by_project = db.query(
+        Project.name.label("name"), 
+        func.count(Report.id).label("count")
+    ).join(Report).group_by(Project.name).all()
+    reports_by_project_data = [ChartDataPoint(name=r.name, value=r.count) for r in reports_by_project]
+
+    # 3. Reports by team member
+    reports_by_member = db.query(
+        User.full_name.label("name"), 
+        func.count(Report.id).label("count")
+    ).join(Report).group_by(User.full_name).all()
+    reports_by_member_data = [ChartDataPoint(name=r.name, value=r.count) for r in reports_by_member]
+
+    # 4. Status distribution
+    status_dist = db.query(
+        Report.status.label("name"), 
+        func.count(Report.id).label("count")
+    ).group_by(Report.status).all()
+    status_dist_data = [ChartDataPoint(name=r.name, value=r.count) for r in status_dist]
+
+    # 5. Open blockers count by project (assuming blockers field exists in Report)
+    # The requirement is "open blockers count". Assuming non-empty blockers field means "open".
+    blockers_by_project = db.query(
+        Project.name.label("name"),
+        func.count(Report.id).filter(Report.blockers != "").label("count")
+    ).join(Report).group_by(Project.name).all()
+    blockers_data = [ChartDataPoint(name=r.name, value=r.count) for r in blockers_by_project]
+
+    return AnalyticsData(
+        reports_per_week=reports_per_week_data,
+        reports_by_project=reports_by_project_data,
+        reports_by_member=reports_by_member_data,
+        status_distribution=status_dist_data,
+        open_blockers_by_project=blockers_data
     )
