@@ -19,7 +19,16 @@ export const RegisterPage = () => {
       await register({ email, password, full_name, role: 'member' });
       navigate('/');
     } catch (err: any) {
-      setError(err.response?.data?.detail || 'Registration failed');
+      const responseData = err.response?.data;
+      if (responseData?.detail && Array.isArray(responseData.detail)) {
+        // FastAPI validation error format
+        const errorMessages = responseData.detail.map((err: any) => `${err.loc[1]}: ${err.msg}`);
+        setError(errorMessages);
+      } else if (responseData?.detail) {
+        setError(responseData.detail);
+      } else {
+        setError('Registration failed');
+      }
     }
   };
 
