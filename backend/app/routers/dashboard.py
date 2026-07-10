@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from sqlalchemy import func
+from datetime import date, timedelta
 
 from app.core.database import get_db
 from app.dependencies import require_manager
@@ -23,11 +24,19 @@ def get_dashboard(
     
     draft_reports = db.query(func.count(Report.id)).filter(Report.status == "draft").scalar()
     submitted_reports = db.query(func.count(Report.id)).filter(Report.status == "submitted").scalar()
-    # Assuming "late" and "pending" are mapped to status values if they exist, 
-    # but based on models only draft/submitted exist. 
-    # For now, return 0 for late/pending as no definition for them in models.
     late_reports = 0 
     pending_reports = 0
+    
+    # New metrics
+    today = date.today()
+    start_of_week = today - timedelta(days=today.weekday())
+    total_reports_this_week = db.query(func.count(Report.id)).filter(Report.week_start_date == start_of_week).scalar()
+    
+    # Compliance rate: submitted / total_users (if > 0)
+    compliance_rate = (submitted_reports / total_users * 100) if total_users > 0 else 0.0
+    
+    # Open blockers
+    open_blockers = db.query(func.count(Report.id)).filter(Report.blockers != "").scalar()
 
     # Project summary
     projects = db.query(Project).all()
@@ -35,7 +44,6 @@ def get_dashboard(
     for project in projects:
         num_members = len(project.members)
         num_reports = len(project.reports)
-        # Placeholder for completion %
         completion_percentage = 0.0 
         project_summaries.append(ProjectSummary(
             project_name=project.name,
@@ -64,6 +72,9 @@ def get_dashboard(
         submitted_reports=submitted_reports,
         late_reports=late_reports,
         pending_reports=pending_reports,
+        total_reports_this_week=total_reports_this_week,
+        compliance_rate=compliance_rate,
+        open_blockers=open_blockers,
         project_summaries=project_summaries,
         recent_activity=recent_activity
     )

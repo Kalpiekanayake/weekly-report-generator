@@ -38,6 +38,9 @@ export const DashboardPage = () => {
     { label: 'Submitted Reports', value: data.submitted_reports },
     { label: 'Pending Reports', value: data.pending_reports },
     { label: 'Late Reports', value: data.late_reports },
+    { label: 'Reports This Week', value: data.total_reports_this_week },
+    { label: 'Compliance Rate', value: `${data.compliance_rate.toFixed(1)}%` },
+    { label: 'Open Blockers', value: data.open_blockers },
   ];
 
   return (

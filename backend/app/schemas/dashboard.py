@@ -22,6 +22,9 @@ class DashboardStats(BaseModel):
     submitted_reports: int
     late_reports: int
     pending_reports: int
+    total_reports_this_week: int
+    compliance_rate: float
+    open_blockers: int
     project_summaries: List[ProjectSummary]
     recent_activity: List[RecentActivity]
 
