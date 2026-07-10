@@ -1,9 +1,11 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from datetime import datetime
+from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
-from typing import List
+from sqlalchemy import desc
+from typing import List, Optional
 
 from app.core.database import get_db
-from app.dependencies import get_current_user
+from app.dependencies import get_current_user, require_manager
 from app.models.report import Report
 from app.models.project import Project
 from app.models.user import User
@@ -46,17 +48,76 @@ def create_report(
     db.commit()
     db.refresh(new_report)
     
-    # Need to load relationships for report_to_out to work correctly
-    # Since we are in the same session, we can just access them after refresh.
     return report_to_out(new_report)
+
+
+@router.post("/{report_id}/submit/", response_model=ReportOut)
+def submit_report(
+    report_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    report = db.query(Report).filter(Report.id == report_id).first()
+    if not report:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Report not found"
+        )
+
+    # Only owner can submit
+    if report.user_id != current_user.id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Only the report owner can submit.",
+        )
+    
+    # Only draft can be submitted
+    if report.status != "draft":
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Only draft reports can be submitted.",
+        )
+
+    report.status = "submitted"
+    report.submitted_at = datetime.utcnow()
+    db.commit()
+    db.refresh(report)
+    return report_to_out(report)
 
 
 @router.get("/my/", response_model=List[ReportOut])
 def get_my_reports(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
+    skip: int = Query(0, ge=0),
+    limit: int = Query(20, ge=1, le=100),
 ):
-    reports = db.query(Report).filter(Report.user_id == current_user.id).all()
+    reports = db.query(Report).filter(Report.user_id == current_user.id).order_by(desc(Report.week_start_date)).offset(skip).limit(limit).all()
+    return [report_to_out(r) for r in reports]
+
+
+@router.get("/", response_model=List[ReportOut])
+def list_reports_for_manager(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_manager),
+    week_start_date: Optional[str] = None,
+    project_id: Optional[str] = None,
+    user_id: Optional[str] = None,
+    status: Optional[str] = None,
+    skip: int = Query(0, ge=0),
+    limit: int = Query(20, ge=1, le=100),
+):
+    query = db.query(Report)
+    
+    if week_start_date:
+        query = query.filter(Report.week_start_date == week_start_date)
+    if project_id:
+        query = query.filter(Report.project_id == project_id)
+    if user_id:
+        query = query.filter(Report.user_id == user_id)
+    if status:
+        query = query.filter(Report.status == status)
+        
+    reports = query.order_by(desc(Report.week_start_date)).offset(skip).limit(limit).all()
     return [report_to_out(r) for r in reports]
 
 
