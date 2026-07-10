@@ -32,6 +32,8 @@ from app.models import ai_chat   # noqa: F401
 
 # Routers
 from app.routers import auth as auth_router
+from app.routers import projects as projects_router
+from app.routers import reports as reports_router
 
 
 # ---------------------------------------------------------------------------
@@ -97,7 +99,9 @@ app.add_middleware(
 # ---------------------------------------------------------------------------
 API_V1 = "/api/v1"
 
-app.include_router(auth_router.router, prefix=API_V1)
+app.include_router(auth_router.router,     prefix=API_V1)
+app.include_router(projects_router.router, prefix=API_V1)
+app.include_router(reports_router.router,  prefix=API_V1)
 
 
 # ---------------------------------------------------------------------------
