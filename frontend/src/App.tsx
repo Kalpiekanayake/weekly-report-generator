@@ -6,6 +6,7 @@ import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
 import { MyReportsPage } from './pages/MyReportsPage';
 import { ReportFormPage } from './pages/ReportFormPage';
+import { DashboardPage } from './pages/DashboardPage';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route element={<ProtectedRoute />}>
             <Route element={<AppLayout />}>
               <Route path="/" element={<MyReportsPage />} />
+              <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/reports/new" element={<ReportFormPage />} />
               <Route path="/reports/:id/edit" element={<ReportFormPage />} />
             </Route>
