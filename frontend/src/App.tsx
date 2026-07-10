@@ -7,6 +7,8 @@ import { RegisterPage } from './pages/RegisterPage';
 import { MyReportsPage } from './pages/MyReportsPage';
 import { ReportFormPage } from './pages/ReportFormPage';
 import { DashboardPage } from './pages/DashboardPage';
+import { ProjectsPage } from './pages/ProjectsPage';
+import { ProjectFormPage } from './pages/ProjectFormPage';
 
 function App() {
   return (
@@ -21,6 +23,9 @@ function App() {
               <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/reports/new" element={<ReportFormPage />} />
               <Route path="/reports/:id/edit" element={<ReportFormPage />} />
+              <Route path="/projects" element={<ProjectsPage />} />
+              <Route path="/projects/new" element={<ProjectFormPage />} />
+              <Route path="/projects/:id/edit" element={<ProjectFormPage />} />
             </Route>
           </Route>
         </Routes>
