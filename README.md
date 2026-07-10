@@ -210,6 +210,9 @@ Add screenshots here.
 <img width="1341" height="634" alt="image" src="https://github.com/user-attachments/assets/f594d051-b2c8-4c60-9820-cba985f3c2d5" />
 
 ---
+#  ER-Diagram
+![Uploading Weekly Report Generator.drawio.png…]()
+
 
 # 🔮 Future Improvements
 
